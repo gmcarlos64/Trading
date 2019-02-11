@@ -18,22 +18,21 @@ Bajar_Precios <- function(Columns, Tickers, Fecha_In, Fecha_Fn) {
 #################
 archivos <- c()
 pesos <- list()
-for(i in 1:10){
+for(i in 1:13){
   archivos[i]<- paste("IVV_holdings",i," IVV_holdings (2).csv", sep=" ")
 }
-datos_ <- read.csv(file.path = "C:\Users\if685009\Desktop\lab1","IVV_holdings(2)"
-primero <- wich(x = " IVV_holdings"["A11",1]=="Ticker")
-ultimo <- lenght(datos_[,1])
+
+datos_ <- choose.files(default= "IVV_holdings (2).csv")
+primero <- which(x = "IVV_holdings (2).csv"[,1] == "Ticker")
+ultimo <- length(datos_[,1])
 
 tk<- datos_[(primero+1):ultimo,1]
 pesos <- datos_[primero:ultimo,4]
 
-histórico_[['']] <-c("tickers"=tk,"pesos"=pesos)
+histÃ³rico_[['']] <-c("tickers"=tk,"pesos"=pesos)
 
 
 ############################
-for(i in 1:length(tickers))
-  tk <- c(Bajar_Precios(Tickers[i]))
 cs <- c("date", "adj_close")
 fs <- c("2018-02-02", "2019-01-02")
 Datos <- list()
@@ -46,26 +45,26 @@ names(Datos) <- tk
 for(i in 1:length(tk))
   Datos[[i]]$adj_close_r <- c(0, diff(log(Datos[[i]]$adj_close)))
 
-for(i in 1:lenght(Datos[i]$adj_close_r)
+for(i in 1:lenght(Datos[i]$adj_close_r),
     Rends <- xts(x = cbind(Datos[[i:lenght(Datos[i]$adj_close_r)]]),
-                 order.by = Datos[[i]]$date)[-1]
-    names(Rends) <- tk
+                 order.by = Datos[[i]]$date)[-1
+    names(Rends) <- tk,
     
-    Port1 <- portfolio.spec(assets=tk)
+    Port1 <- portfolio.spec(assets=tk),
     Port1 <- add.constraint(portfolio=Port1,
-                            type="full_investment")
+                            type="full_investment"),
     #######################################
     Port1 <- add.constraint(portfolio=Port1,
                             type="box",
-                            min=c(0.1, 0.1, 0.1), max=c(0.7, 0.7, 0.7))
+                            min=c(0.1, 0.1, 0.1), max=c(0.7, 0.7, 0.7)),
     
-    Port1 <- add.objective(portfolio = Port1, type = "return", name = "mean")
+    Port1 <- add.objective(portfolio = Port1, type = "return", name = "mean"),
     
     Port1 <- optimize.portfolio(R=Rends, portfolio=Port1, optimize_method="random",
-                                trace=TRUE, search_size=10000)
+                                trace=TRUE, search_size=10000),
     
     Portafolios <- vector("list",
-                          length = length(Port1$random_portfolio_objective_results))
+                          length = length(Port1$random_portfolio_objective_results)),
     
     for(i in 1:length(Port1$random_portfolio_objective_results)) {
       
@@ -78,8 +77,8 @@ for(i in 1:lenght(Datos[i]$adj_close_r)
     
     df_Portafolios <- data.frame(matrix(nrow=length(Port1$random_portfolio_objective_results),
                                         ncol=3,
-                                        data = 0))
-    colnames(df_Portafolios) <- c("Rend","Var","Clase")
+                                        data = 0)),
+    colnames(df_Portafolios) <- c("Rend","Var","Clase"),
     
     for(i in 1:length(Port1$random_portfolio_objective_results)) {
       
@@ -104,7 +103,8 @@ for(i in 1:lenght(Datos[i]$adj_close_r)
              xaxis = list(title = "Riesgo (Desviaci?n Est?ndar Anualizada)",
                           showgrid = F),
              yaxis = list(title = "Valor Esperado (Rendimiento Anualizado)"),
-             legend = list(orientation = 'h', y = -0.25))
-    Plot_portafolios
+             legend = list(orientation = 'h', y = -0.25)),
+    Plot_portafolios,
     
     Port_1 <- df_Portafolios[which.max(df_Portafolios$Rend),]
+    
