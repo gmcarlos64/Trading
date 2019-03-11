@@ -1,0 +1,39 @@
+# load packages
+library(quantmod)
+library(tseries)
+library(PerformanceAnalytics)
+
+# download prices
+IVV <-get.hist.quote(instrument="IVV",start="2017-12-31",quote="AdjClose",compression="d")
+IVV2 <-get.hist.quote(instrument="spy",start="2017-12-31",quote="AdjClose",compression="d")
+
+# choose asset weights
+w = c(.6,0.4) # 60% / 40%
+
+# merge price histories into one dataset
+# calculate 1-day % returns
+# and label columns
+portfolio.prices <-as.xts(merge(IVV,IVV2))
+portfolio.returns <-na.omit(ROC(portfolio.prices,1,"discrete"))
+colnames(portfolio.returns) <-c("IVV","IVV2")
+##################
+# calculate portfolio total returns
+# rebalanced portfolio
+portfolio.rebal <-Return.portfolio(portfolio.returns,
+                                   rebalance_on="years",
+                                   weights=w,wealth.index=TRUE,verbose=TRUE)
+
+# buy and hold portfolio/no rebalancing
+portfolio.bh <-Return.portfolio(portfolio.returns,
+                                weights=w,wealth.index=TRUE,verbose=TRUE)
+
+# merge portfolio returns into one dataset
+# label columns
+portfolios.2 <-cbind(portfolio.rebal$returns,portfolio.bh$returns)
+colnames(portfolios.2) <-c("rebalanced","buy and hold")
+###############################
+chart.CumReturns(portfolios.2,
+                 wealth.index=TRUE,
+                 legend.loc="bottomright",
+                 main="Growth of $1 investment",
+                 ylab="$")
